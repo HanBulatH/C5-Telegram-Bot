@@ -1,7 +1,7 @@
 import json
 import requests
 from configuration import valuts
-
+from configuration import API_KEY
 
 class APIException(Exception):
     pass
@@ -28,9 +28,9 @@ class Convertor:
         except ValueError:
             raise APIException(f'Не удалось обработать количество {amount}!')
 
-        r = requests.get(f"https://api.exchangeratesapi.io/latest?base={base_key}&symbols={sym_key}")
-        resp = json.loads(r.content)
-        new_price = resp['rates'][sym_key] * amount
-        new_price = round(new_price, 3)
-        message = f"Цена {amount} {base} в {sym} : {new_price}"
+        r = requests.get(f"http://api.exchangeratesapi.io/latest??access_key={API_KEY}&base={base_key}&symbols={sym_key}")
+        r = requests.get(f"https://min-api.cryptocompare.com/data/price?fsym={base_key}&tsyms={sym_key}")
+        # print(r.content)
+        result = json.loads(r.content)[valuts[sym]]
+        message = f"Цена {amount} {base} в {sym} : {result}"
         return message
